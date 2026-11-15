@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.15.0 (2026-11-15)
+- **Built-in FTP, FTPS and SFTP client with a two-panel file manager** in the style of Midnight Commander: local
+  files on the left, the server on the right. Tag files, copy folders recursively in either direction (F5), rename
+  or move (F6), make folders (F7), delete (F8), sort (F2), go to a path (F4), progress with rate and ETA, Esc to
+  cancel. Mouse supported. Connection types **ftp**, **ftpes** (explicit TLS), **ftps** (implicit TLS) and **sftp**;
+  quick connect and the command line accept `ftp://`, `ftpes://`, `ftps://` and `sftp://` URLs with user, password,
+  port and start folder. Directory entries have a new "Remote folder" field (saved as `RemoteDir` in goterm.lst).
+- FTPS certificates are verified normally; self-signed ones are remembered on first use (`known_certs`) and refused
+  if they change. SFTP uses the same SSH login and `known_hosts` as the SSH terminal, with pipelined transfers.
+- Tests run the client against real pyftpdlib and paramiko servers (skipped if those are not installed).
+
 ## 1.14.1 (2026-11-15)
 - **Fix: ANSI screens drawn one row too low.** `ESC[2J` (clear screen) now also moves the cursor to the top-left,
   as in SyncTERM and ANSI.SYS. Before, a BBS header sent after a clear started on the row where the cursor
