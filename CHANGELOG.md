@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.16.1 (2026-11-15)
+- **Find files faster.** In the file picker (uploads, imports) typing the first letters of a file or folder name
+  jumps to it (repeat the letter for the next match). `/` or Ctrl+F searches: the list shows only names containing
+  your text. The same type-to-jump, plus `/` to find, works in the FTP/SFTP file manager panels.
+
+## 1.16.0 (2026-11-15)
+- **JPEG XL graphics** (SyncTERM's image APCs), so Synchronet's SyncDOOM / SyncDuke and similar doors use their
+  fast JPEG XL tier instead of sixel. Supported: `Q;JXL` (answered "yes"), `C;S` store, `C;DrawJXL`,
+  `C;DrawJXLBlob`, `C;DrawPPM`, `C;DrawPPMBlob` with SX/SY/SW/SH, DX/DY, ZX/ZY (integer zoom) and FX/FY (mirror).
+  Mask options and the copy/paste buffers are not implemented. Stored images are kept in memory, not written to
+  the cache folder.
+- The decoder is a vendored pure-Go JPEG XL decoder (MIT license, from github.com/kpfaulkner/jxl-go) with its
+  logging and extra dependencies removed. It was made about 3x faster for this use: the edge-preserving filter was
+  rewritten without per-pixel coordinate mirroring, constant tables are cached between frames and the sRGB curve
+  uses a lookup table. Output matches libjxl's to rounding (tested against libjxl's own decode).
+- GoTerm now answers the terminal-identification query (`ESC [ c`) the way SyncTERM does, with its CTerm revision
+  (1.332). The host reads this as `cterm=1332`; before, it saw `cterm=0` and treated GoTerm as an unknown
+  terminal. Revision 1.332 tells doors that inline images (`Draw*Blob`) and zoom are available.
+- Large images are decoded with the application lock released, so the window stays responsive.
+
+
+## 1.15.1 (2026-11-15)
+- **Fix: SyncDOOM / SyncDuke (Synchronet graphics doors) showed mostly black with a few scattered pixels.**
+  Sixel color registers are now kept between images, as in SyncTERM. The doors send the 256-color palette once
+  and then only small update boxes that select registers without redefining them; GoTerm used to reset the
+  registers for every image, so those boxes drew with undefined (black) colors. Registers are reset by a full
+  terminal reset (ESC c).
+- Tests added for register persistence, sixel decode speed (a 640x384 frame decodes in about 13 ms) and the
+  control strings the doors send on entry and exit.
+
 ## 1.15.0 (2026-11-15)
 - **Built-in FTP, FTPS and SFTP client with a two-panel file manager** in the style of Midnight Commander: local
   files on the left, the server on the right. Tag files, copy folders recursively in either direction (F5), rename
