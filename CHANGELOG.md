@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.16.2 (2026-11-15)
+- **Fix: type-to-jump and `/` search in the file picker did nothing in 1.16.1.** The picker looked for a key code
+  that the Windows and X11 windows never send for ordinary characters. It now accepts typed characters from every
+  backend, and the test uses the same key events the windows produce.
+- JPEG XL decoding now uses at most half of the CPU cores (1 to 4), so a door streaming frames cannot use up the
+  whole computer.
+
 ## 1.16.1 (2026-11-15)
 - **Find files faster.** In the file picker (uploads, imports) typing the first letters of a file or folder name
   jumps to it (repeat the letter for the next match). `/` or Ctrl+F searches: the list shows only names containing
